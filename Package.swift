@@ -10,6 +10,11 @@ let package = Package(
         .library(
             name: "STTextView-Plugin-TreeSitter",
             targets: ["STPluginTreeSitter"]),
+        // The parsing/highlighting core, without the AppKit/UIKit attribute
+        // applier, so a host can drive tree-sitter with an applier of its own.
+        .library(
+            name: "STPluginTreeSitterCore",
+            targets: ["STPluginTreeSitterCore"]),
     ],
     dependencies: [
         .package(url: "https://github.com/krzyzanowskim/STTextView", from: "2.4.0"),
