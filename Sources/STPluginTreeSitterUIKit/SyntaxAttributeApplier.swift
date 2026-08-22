@@ -67,7 +67,13 @@ final class SyntaxAttributeApplier {
     private func coalescedTokenRuns(_ tokens: [SyntaxToken]) -> [TokenRun] {
         let sorted = tokens.sorted {
             if $0.range.location != $1.range.location { return $0.range.location < $1.range.location }
-            if $0.range.length != $1.range.length { return $0.range.length < $1.range.length }
+            // Longest first at a shared start location. Runs are painted in
+            // order and later writes win, so an enclosing capture has to land
+            // before the narrower captures nested inside it. Ascending length
+            // inverted that: `@none` over a fenced block repainted the block's
+            // first token, and `@text.title` repainted emphasis that began at
+            // the heading's first inline character.
+            if $0.range.length != $1.range.length { return $0.range.length > $1.range.length }
             return $0.nameComponents.count < $1.nameComponents.count
         }
 
